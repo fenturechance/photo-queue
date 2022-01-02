@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script src="./index.js"></script>
+  <style>
+    ul {
+      padding: 0;
+    }
+    li {
+      list-style: none;
+    }
+    .flex {
+      display: flex;
+    }
+    .text-center {
+      text-align: center;
+    }
+    .flex-grow {
+      flex-grow: 1;
+    }
+    .bg-gray-50 {
+      background-color: #eee;
+    }
+    .px-2 {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    .flex-col {
+      flex-direction: column;
+    }
+    .flex-wrap {
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="flex">
+    <div class="px-2">
+      <p class="text-center">Image Area</p>
+      <ul>
+        <li v-for="(photo, index) in PhotoList" :key="photo.imagePath">
+          <img :src="photo.imagePath" @click="imageProcess(photo)">
+        </li>
+      </ul>
+    </div>
+    <div class="bg-gray-50 flex-grow px-2">
+      <p class="text-center">Queue Area</p>
+      <ul>
+        <li v-for="(photo, index) in photoQueue" :key="photo.imagePath">
+          <img :src="photo.imagePath">
+        </li>
+      </ul>
+    </div>
+  </div>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        PhotoList: PhotoList,
+        photoQueue: [],
+        timer: null
+      },
+      beforeDestroy() {
+        clearInterval(this.timer)
+      },
+      mounted() {
+        this.setTimer()
+      },
+      methods: {
+        imageProcess(photo) {
+          if(this.photoQueue.find(item => item.imagePath === photo.imagePath)) {
+            return alert('Image is processing')
+          }
+          imageProcess(photo.imagePath)
+        },
+        setTimer() {
+          this.timer = setInterval(() => {
+            this.photoQueue = PhotoToolInstance.photoQueue
+          }, 500)
+        }
+      }
+    })
+  </script>
+</body>
+</html>
